@@ -631,6 +631,7 @@ public:
 // ref: http://gcc.gnu.org/onlinedocs/libstdc++/manual/status.html
 #ifndef NDEBUG
 	#if defined(HAVE_CXX11)
+	#ifndef USING_THIRD_PARTY_LIBS
 	// feature support seems to be: gcc   clang   msvc
 	// auto                         4.4   2.9     2010
 	// std::is_trivial              4.5   ?       2012 (2010 only duplicates std::is_pod)
@@ -712,6 +713,7 @@ public:
 		static_assert(std::is_trivial<U>::value, "memmove on non-trivial object U");
 		return ptr_memmove(memmove_dest, memmove_src, count);
 	}
+	#endif // USING_THIRD_PARTY_LIBS
 	#endif // HAVE_CXX11
 #endif // NDEBUG
 
