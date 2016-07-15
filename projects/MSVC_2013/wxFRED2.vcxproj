@@ -263,7 +263,7 @@
       <DataExecutionPrevention />
     </Link>
     <CustomBuildStep>
-      <Command>copy %(FullPath) "$(FS2PATH)/wxfred2_open_3_7_5-debug.exe"
+      <Command>copy %(FullPath) "$(FS2PATH)/wxfred2_open_3_7_5-debug.exe"</Command>
       <Message>Copying build...</Message>
       <Outputs>$(FS2PATH)/wxfred2_open_3_7_5-debug.exe;$(FS2PATH)\wxfred.xrc;%(Outputs)</Outputs>
     </CustomBuildStep>
@@ -321,7 +321,7 @@
       <DataExecutionPrevention />
     </Link>
     <CustomBuildStep>
-      <Command>copy %(FullPath) "$(FS2PATH)\wxfred2_open_3_7_5.exe"
+      <Command>copy %(FullPath) "$(FS2PATH)\wxfred2_open_3_7_5.exe"</Command>
       <Message>Copying build...</Message>
       <Outputs>$(FS2PATH)\wxfred2_open_3_7_5.exe;$(FS2PATH)\wxfred.xrc;%(Outputs)</Outputs>
     </CustomBuildStep>
