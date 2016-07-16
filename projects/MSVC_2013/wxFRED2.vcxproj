@@ -263,10 +263,17 @@
       <DataExecutionPrevention />
     </Link>
     <CustomBuildStep>
-      <Command>copy %(FullPath) "$(FS2PATH)/wxfred2_open_3_7_5-debug.exe"</Command>
+      <Command>copy $(TargetPath) "$(FS2PATH)/wxfred2_open_3_7_5-debug.exe"</Command>
       <Message>Copying build...</Message>
-      <Outputs>$(FS2PATH)/wxfred2_open_3_7_5-debug.exe;$(FS2PATH)\wxfred.xrc;%(Outputs)</Outputs>
+      <Outputs>
+      </Outputs>
     </CustomBuildStep>
+    <PostBuildEvent>
+      <Command>copy $(TargetPath) "$(FS2PATH)/wxfred2_open_3_7_5-debug.exe"</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Copying build...</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -321,10 +328,19 @@
       <DataExecutionPrevention />
     </Link>
     <CustomBuildStep>
-      <Command>copy %(FullPath) "$(FS2PATH)\wxfred2_open_3_7_5.exe"</Command>
-      <Message>Copying build...</Message>
-      <Outputs>$(FS2PATH)\wxfred2_open_3_7_5.exe;$(FS2PATH)\wxfred.xrc;%(Outputs)</Outputs>
+      <Command>
+      </Command>
+      <Message>
+      </Message>
+      <Outputs>
+      </Outputs>
     </CustomBuildStep>
+    <PostBuildEvent>
+      <Command>copy $(TargetPath) "$(FS2PATH)/wxfred2_open_3_7_5.exe"</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Copying build...</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
