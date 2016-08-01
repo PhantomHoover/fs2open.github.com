@@ -22,7 +22,7 @@ addons:
         project:
             name: "scp-fs2open/fs2open.github.com"
         notification_email: niffiwan.scp@gmail.com
-        build_command:   "cd build && make -j2"
+        build_command:   "ci/travis/script.sh"
         # must match TRAVIS_BRANCH check below
         branch_pattern: coverity_scan
 deploy:
