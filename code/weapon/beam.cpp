@@ -949,6 +949,7 @@ void beam_move_all_pre()
 
 				// type B beam weapons move across the target somewhat randomly
 				case BEAM_TYPE_B :
+				case BEAM_TYPE_F :
 					beam_type_b_move(b);
 					break;				
 
@@ -1885,6 +1886,7 @@ int beam_start_firing(beam *b)
 	// re-aim type A and D beam weapons here, otherwise they tend to miss		
 	case BEAM_TYPE_A:
 	case BEAM_TYPE_D:
+	case BEAM_TYPE_F:
 		beam_aim(b);
 		break;
 	
@@ -2113,6 +2115,17 @@ void beam_get_binfo(beam *b, float accuracy, int num_shots)
 		b->binfo.dir_b = turret_norm;
 		break;
 
+	case BEAM_TYPE_F:
+		vm_vec_sub(&b->binfo.dir_a, &b->target->pos, &turret_point);
+		vm_vec_normalize(&b->binfo.dir_a);
+
+		vm_vec_scale_add(&b->binfo.dir_b, &b->target->pos, &b->target->phys_info.vel, b->life_total);
+		vm_vec_sub2(&b->binfo.dir_b, &turret_point);
+		vm_vec_normalize(&b->binfo.dir_b);
+
+		b->binfo.delta_ang = fl_abs(vm_vec_delta_ang_norm(&b->binfo.dir_a, &b->binfo.dir_b, NULL));
+		break;
+
 	default:
 		break;
 	}
@@ -2266,6 +2279,19 @@ void beam_aim(beam *b)
 	case BEAM_TYPE_E:
 		// point directly in the direction of the turret
 		vm_vec_scale_add(&b->last_shot, &b->last_start, &temp, b->range);
+		break;
+
+	case BEAM_TYPE_F:
+		vm_vec_sub(&b->binfo.dir_a, &b->target->pos, &b->last_start);
+		vm_vec_normalize(&b->binfo.dir_a);
+
+		vm_vec_scale_add(&b->binfo.dir_b, &b->target->pos, &b->target->phys_info.vel, b->life_total);
+		vm_vec_sub2(&b->binfo.dir_b, &b->last_start);
+		vm_vec_normalize(&b->binfo.dir_b);
+
+		b->binfo.delta_ang = fl_abs(vm_vec_delta_ang_norm(&b->binfo.dir_a, &b->binfo.dir_b, NULL));
+
+		vm_vec_scale_add(&b->last_shot, &b->last_start, &b->binfo.dir_a, b->range);
 		break;
 
 	default:
@@ -3333,6 +3359,7 @@ float beam_get_cone_dot(beam *b)
 		return cosf(fl_radians(50.5f));
 		
 	case BEAM_TYPE_B:
+	case BEAM_TYPE_F:
 		return vm_vec_dot(&b->binfo.dir_a, &b->binfo.dir_b);
 
 	default:
