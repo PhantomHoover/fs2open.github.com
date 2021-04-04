@@ -144,10 +144,9 @@ struct script_action
 
 class ConditionedHook
 {
-private:
+public:
 	SCP_vector<script_action> Actions;
 	script_condition Conditions[MAX_HOOK_CONDITIONS];
-public:
 	bool AddCondition(script_condition *sc);
 	bool AddAction(script_action *sa);
 
@@ -169,6 +168,7 @@ class script_state
 	//Utility variables
 	SCP_vector<image_desc> ScriptImages;
 	SCP_vector<ConditionedHook> ConditionalHooks;
+	SCP_map<int32_t,SCP_vector<size_t>> HookMap;
 
 	SCP_vector<script_function> GameInitFunctions;
 
@@ -235,6 +235,8 @@ public:
 	void ParseGlobalChunk(ConditionalActions hookType, const char* debug_str=nullptr);
 	bool ParseCondition(const char *filename="<Unknown>");
 	void AddConditionedHook(ConditionedHook hook);
+	void BuildHookMap();
+	SCP_vector<size_t> HooksForAction(int action);
 
 	void AddGameInitFunction(script_function func);
 

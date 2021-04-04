@@ -680,11 +680,17 @@ int script_state::RunCondition(int action, object* objp, int more_data)
 		return num;
 	}
 
-	for(SCP_vector<ConditionedHook>::iterator chp = ConditionalHooks.begin(); chp != ConditionalHooks.end(); ++chp) 
+	if (HookMap.empty()) {
+		this->BuildHookMap();
+	}
+
+	auto hookindices = this->HooksForAction(action);
+
+	for(auto& i : hookindices) 
 	{
-		if(chp->ConditionsValid(action, objp, more_data))
+		if(ConditionalHooks[i].ConditionsValid(action, objp, more_data))
 		{
-			chp->Run(this, action);
+			ConditionalHooks[i].Run(this, action);
 			num++;
 		}
 	}
@@ -715,6 +721,7 @@ void script_state::Clear()
 	// Free all lua value references
 	ConditionalHooks.clear();
 	HookVariableValues.clear();
+	HookMap.clear();
 
 	if (LuaState != nullptr) {
 		OnStateDestroy(LuaState);
@@ -1098,6 +1105,24 @@ bool script_state::ParseCondition(const char *filename)
 }
 
 void script_state::AddConditionedHook(ConditionedHook hook) { ConditionalHooks.push_back(std::move(hook)); }
+
+void script_state::BuildHookMap() {
+	SCP_map<int32_t, SCP_vector<size_t>> hookmap{};
+	for (auto it = ConditionalHooks.begin(); it != ConditionalHooks.end(); ++it) {
+		for (const auto& action : it->Actions) {
+			auto v = hookmap[action.action_type];
+			v.push_back(it - ConditionalHooks.begin());
+			hookmap[action.action_type] = v;
+		}
+	}
+	
+	HookMap.clear();
+	HookMap = hookmap;
+}
+
+SCP_vector<size_t> script_state::HooksForAction(int action) {
+	return HookMap[action];
+}
 
 void script_state::AddGameInitFunction(script_function func) { GameInitFunctions.push_back(std::move(func)); }
 
